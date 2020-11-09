@@ -5,6 +5,17 @@ import React from 'react'
 import {Switch} from '../switch'
 
 const ToggleContext = React.createContext()
+ToggleContext.displayName = 'ToggleContext'
+
+const useToggle = () => {
+  const context = React.useContext(ToggleContext)
+
+  if (typeof context === 'undefined') {
+    throw new Error("Component used outside of Toggle")
+  }
+
+  return context;
+}
 
 function Toggle({onToggle, children}) {
   const [on, setOn] = React.useState(false)
@@ -14,19 +25,19 @@ function Toggle({onToggle, children}) {
 }
 
 function ToggleOn({children}) {
-  const { on } = React.useContext(ToggleContext);
+  const { on } = useToggle();
 
   return on ? children : null
 }
 
 function ToggleOff({children}) {
-  const { on } = React.useContext(ToggleContext);
+  const { on } = useToggle();
 
   return on ? null : children
 }
 
 function ToggleButton({props}) {
-  const { on, toggle } = React.useContext(ToggleContext);
+  const { on, toggle } = useToggle();
 
   return <Switch {...props} on={on} onClick={toggle} />
 }
